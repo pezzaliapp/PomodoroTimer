@@ -1,34 +1,36 @@
 let timerId = null;
 let targetTime = 0;
 
-self.onmessage = (e) => {
-  switch (e.data.command) {
+self.onmessage = (event) => {
+  const { command, timeLeft } = event.data;
+
+  switch (command) {
     case 'start':
-      targetTime = e.data.targetTime;
+      targetTime = Date.now() + timeLeft;
       clearInterval(timerId);
 
       timerId = setInterval(() => {
         const remaining = targetTime - Date.now();
-        
+
         if (remaining <= 0) {
           clearInterval(timerId);
-          self.postMessage({ finished: true });
-          return;
+          self.postMessage({ command: 'end' });
+        } else {
+          const minutes = Math.floor(remaining / 60000);
+          const seconds = Math.floor((remaining % 60000) / 1000);
+          self.postMessage({ command: 'tick', minutes, seconds });
         }
-
-        const minutes = Math.floor(remaining / 60000);
-        const seconds = Math.floor((remaining % 60000) / 1000);
-        self.postMessage({ minutes, seconds });
       }, 1000);
       break;
 
     case 'pause':
       clearInterval(timerId);
+      self.postMessage({ command: 'paused', timeLeft: targetTime - Date.now() });
       break;
 
     case 'reset':
       clearInterval(timerId);
-      self.postMessage({ minutes: 25, seconds: 0 });
+      self.postMessage({ command: 'reset' });
       break;
   }
 };
