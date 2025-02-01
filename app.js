@@ -1,78 +1,82 @@
-class PomodoroApp {
+class PomodoroTimer {
   constructor() {
-    this.timerWorker = new Worker('timer-worker.js');
-    this.targetTime = 0;
+    this.minutes = 25;
+    this.seconds = 0;
     this.isRunning = false;
-    this.pomodoroCount = 0;
-
-    this.initDOM();
-    this.initEventListeners();
-  }
-
-  initDOM() {
+    this.timerInterval = null;
+    
     this.dom = {
       minutes: document.getElementById('minutes'),
       seconds: document.getElementById('seconds'),
-      status: document.getElementById('status'),
       startBtn: document.getElementById('start'),
       pauseBtn: document.getElementById('pause'),
       resetBtn: document.getElementById('reset'),
+      status: document.getElementById('status'),
       pomodoroCounter: document.getElementById('count')
     };
+    
+    this.pomodoroCount = 0;
+    
+    this.initEventListeners();
   }
 
   initEventListeners() {
     this.dom.startBtn.addEventListener('click', () => this.startTimer());
     this.dom.pauseBtn.addEventListener('click', () => this.pauseTimer());
     this.dom.resetBtn.addEventListener('click', () => this.resetTimer());
-
-    this.timerWorker.onmessage = (e) => {
-      if (e.data.finished) {
-        this.handleSessionEnd();
-      } else {
-        this.updateDisplay(e.data.minutes, e.data.seconds);
-      }
-    };
   }
 
   startTimer() {
-    if (!this.isRunning) {
-      this.isRunning = true;
-      this.targetTime = Date.now() + 25 * 60 * 1000;
-
-      this.timerWorker.postMessage({ command: 'start', targetTime: this.targetTime });
-      this.dom.status.textContent = "In corso...";
-    }
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.dom.status.textContent = "In corso...";
+    
+    this.timerInterval = setInterval(() => {
+      if (this.minutes === 0 && this.seconds === 0) {
+        this.completeSession();
+        return;
+      }
+      
+      if (this.seconds === 0) {
+        this.minutes--;
+        this.seconds = 59;
+      } else {
+        this.seconds--;
+      }
+      
+      this.updateDisplay();
+    }, 1000);
   }
 
   pauseTimer() {
-    if (this.isRunning) {
-      this.isRunning = false;
-      this.timerWorker.postMessage({ command: 'pause' });
-      this.dom.status.textContent = "In pausa ⏸️";
-    }
+    this.isRunning = false;
+    clearInterval(this.timerInterval);
+    this.dom.status.textContent = "In pausa ⏸️";
   }
 
   resetTimer() {
     this.isRunning = false;
-    this.timerWorker.postMessage({ command: 'reset' });
-    this.updateDisplay(25, 0);
+    clearInterval(this.timerInterval);
+    this.minutes = 25;
+    this.seconds = 0;
+    this.updateDisplay();
     this.dom.status.textContent = "Pronto per iniziare!";
   }
 
-  handleSessionEnd() {
-    this.pomodoroCount++;
+  completeSession() {
     this.isRunning = false;
-    this.updateDisplay(25, 0);
-    this.dom.status.textContent = "Sessione completata!";
+    clearInterval(this.timerInterval);
+    this.pomodoroCount++;
     this.dom.pomodoroCounter.textContent = this.pomodoroCount;
+    this.dom.status.textContent = "Sessione completata! ☕";
+    this.resetTimer();
   }
 
-  updateDisplay(minutes, seconds) {
-    this.dom.minutes.textContent = String(minutes).padStart(2, '0');
-    this.dom.seconds.textContent = String(seconds).padStart(2, '0');
+  updateDisplay() {
+    this.dom.minutes.textContent = String(this.minutes).padStart(2, '0');
+    this.dom.seconds.textContent = String(this.seconds).padStart(2, '0');
   }
 }
 
-// Inizializza l'app
-new PomodoroApp();
+// Inizializza il timer
+new PomodoroTimer();
