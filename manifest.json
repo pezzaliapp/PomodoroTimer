@@ -1,12 +1,10 @@
 {
   "name": "Pomodoro Timer",
   "short_name": "Pomodoro",
-  "description": "Un'app per la gestione del tempo con la tecnica Pomodoro",
-  "start_url": "/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#e74c3c",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
