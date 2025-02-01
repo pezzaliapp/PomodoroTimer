@@ -5,9 +5,10 @@ self.addEventListener('message', (e) => {
   switch(e.data.command) {
     case 'start':
       targetTime = e.data.targetTime;
+      clearInterval(timerId);
+
       timerId = setInterval(() => {
-        const now = Date.now();
-        const remaining = targetTime - now;
+        const remaining = targetTime - Date.now();
         
         if (remaining <= 0) {
           clearInterval(timerId);
