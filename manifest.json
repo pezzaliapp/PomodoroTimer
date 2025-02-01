@@ -1,7 +1,7 @@
 {
-  "name": "Pomodoro Pro",
+  "name": "Pomodoro Timer",
   "short_name": "Pomodoro",
-  "description": "Un'app avanzata per la gestione del tempo con la tecnica Pomodoro",
+  "description": "Un'app per la gestione del tempo con la tecnica Pomodoro",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -18,6 +18,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "categories": ["productivity"]
+  ]
 }
