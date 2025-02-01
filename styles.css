@@ -48,17 +48,6 @@ body {
   color: white;
 }
 
-.task-input-group {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-#task-input {
-  padding: 0.5rem;
-  width: 70%;
-}
-
 .task-list {
   list-style: none;
   padding: 0;
