@@ -1,8 +1,8 @@
 let timerId = null;
 let targetTime = 0;
 
-self.addEventListener('message', (e) => {
-  switch(e.data.command) {
+self.onmessage = (e) => {
+  switch (e.data.command) {
     case 'start':
       targetTime = e.data.targetTime;
       clearInterval(timerId);
@@ -28,8 +28,7 @@ self.addEventListener('message', (e) => {
 
     case 'reset':
       clearInterval(timerId);
-      targetTime = 0;
       self.postMessage({ minutes: 25, seconds: 0 });
       break;
   }
-});
+};
