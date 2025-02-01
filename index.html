@@ -28,40 +28,9 @@
         </div>
         <div id="status" class="status-box">Pronto per iniziare!</div>
       </div>
-
-      <section class="task-section">
-        <h2>📌 Attività</h2>
-        <div class="task-input-group">
-          <input type="text" id="task-input" placeholder="Nuova attività..." aria-label="Aggiungi attività">
-          <select id="priority" aria-label="Seleziona priorità">
-            <option value="high">🔴 Alta</option>
-            <option value="medium">🟠 Media</option>
-            <option value="low">🔵 Bassa</option>
-          </select>
-          <button id="add-task" aria-label="Aggiungi attività">➕</button>
-        </div>
-        <ul id="task-list" class="task-list"></ul>
-      </section>
     </main>
-
-    <dialog id="subtask-dialog" aria-labelledby="subtask-dialog-title">
-      <h2 id="subtask-dialog-title">🔨 Scomponi Attività</h2>
-      <div class="subtask-input-group">
-        <input type="text" id="subtask-input" placeholder="Aggiungi sotto-attività..." aria-label="Aggiungi sotto-attività">
-        <button id="add-subtask" aria-label="Aggiungi sotto-attività">➕</button>
-      </div>
-      <ul id="subtask-list" class="subtask-list"></ul>
-      <button id="close-dialog" class="secondary">Chiudi</button>
-    </dialog>
-
-    <aside class="break-section" aria-label="Suggerimenti per le pause">
-      <h2>☕ Idee Pause</h2>
-      <ul id="break-ideas" class="break-ideas"></ul>
-    </aside>
   </div>
 
   <script src="app.js"></script>
-  <!-- Invisible iframe per mantenere attivo il timer su iOS -->
-  <iframe src="silence.mp3" allow="autoplay" style="display:none"></iframe>
 </body>
 </html>
