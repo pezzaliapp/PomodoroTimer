@@ -1,7 +1,7 @@
 {
   "name": "Pomodoro Pro",
   "short_name": "Pomodoro",
-  "description": "Applicazione avanzata per la gestione del tempo con tecnica Pomodoro",
+  "description": "Un'app avanzata per la gestione del tempo con la tecnica Pomodoro",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -17,20 +17,7 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "icon-maskable.png",
-      "sizes": "196x196",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ],
-  "categories": ["productivity", "education"],
-  "screenshots": [
-    {
-      "src": "screenshot1.png",
-      "sizes": "1080x1920",
-      "type": "image/png"
-    }
-  ]
+  "categories": ["productivity"]
 }
