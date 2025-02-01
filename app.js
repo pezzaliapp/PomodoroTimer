@@ -1,12 +1,12 @@
+// app.js
+
 class PomodoroTimer {
   constructor() {
-    this.minutes = 25;
-    this.seconds = 0;
+    this.worker = new Worker('timer-worker.js');
     this.isRunning = false;
-    this.timerInterval = null;
+    this.timeLeft = 25 * 60 * 1000; // 25 minuti
     this.pomodoroCount = 0;
-    this.breakTime = false;
-
+    
     this.audioStart = new Audio('start.mp3');
     this.audioEnd = new Audio('bell-end.mp3');
 
@@ -21,6 +21,7 @@ class PomodoroTimer {
     };
 
     this.initEventListeners();
+    this.initWorker();
   }
 
   initEventListeners() {
@@ -29,56 +30,61 @@ class PomodoroTimer {
     this.dom.resetBtn.addEventListener('click', () => this.resetTimer());
   }
 
+  initWorker() {
+    this.worker.onmessage = (event) => {
+      const { command, minutes, seconds, timeLeft } = event.data;
+
+      if (command === 'tick') {
+        this.updateDisplay(minutes, seconds);
+      } else if (command === 'end') {
+        this.completeSession();
+      } else if (command === 'paused') {
+        this.timeLeft = timeLeft;
+        this.isRunning = false;
+        this.dom.status.textContent = "In pausa ⏸️";
+      } else if (command === 'reset') {
+        this.timeLeft = 25 * 60 * 1000;
+        this.updateDisplay(25, 0);
+        this.dom.status.textContent = "Pronto per iniziare!";
+      }
+    };
+  }
+
   startTimer() {
     if (this.isRunning) return;
     this.isRunning = true;
-    this.dom.status.textContent = "In corso...";
     this.audioStart.play();
-
-    this.timerInterval = setInterval(() => {
-      if (this.minutes === 0 && this.seconds === 0) {
-        this.completeSession();
-        return;
-      }
-
-      if (this.seconds === 0) {
-        this.minutes--;
-        this.seconds = 59;
-      } else {
-        this.seconds--;
-      }
-
-      this.updateDisplay();
-    }, 1000);
+    this.dom.status.textContent = "In corso...";
+    
+    this.worker.postMessage({ command: 'start', timeLeft: this.timeLeft });
   }
 
   pauseTimer() {
+    if (!this.isRunning) return;
     this.isRunning = false;
-    clearInterval(this.timerInterval);
-    this.dom.status.textContent = "In pausa ⏸️";
+    
+    this.worker.postMessage({ command: 'pause' });
   }
 
   resetTimer() {
     this.isRunning = false;
-    clearInterval(this.timerInterval);
-    this.minutes = 25;
-    this.seconds = 0;
-    this.updateDisplay();
-    this.dom.status.textContent = "Pronto per iniziare!";
+    
+    this.worker.postMessage({ command: 'reset' });
+    this.timeLeft = 25 * 60 * 1000;
   }
 
   completeSession() {
     this.isRunning = false;
-    clearInterval(this.timerInterval);
     this.pomodoroCount++;
     this.audioEnd.play();
     this.dom.pomodoroCounter.textContent = this.pomodoroCount;
     this.dom.status.textContent = "Sessione completata!";
+    this.resetTimer();
   }
 
-  updateDisplay() {
-    this.dom.minutes.textContent = String(this.minutes).padStart(2, '0');
-    this.dom.seconds.textContent = String(this.seconds).padStart(2, '0');
+  updateDisplay(minutes, seconds) {
+    this.dom.minutes.textContent = String(minutes).padStart(2, '0');
+    this.dom.seconds.textContent = String(seconds).padStart(2, '0');
   }
 }
 
