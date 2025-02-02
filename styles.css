@@ -48,14 +48,18 @@ body {
   color: white;
 }
 
-.task-list {
-  list-style: none;
-  padding: 0;
+/* Stile per il video */
+#background-video {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 20px;
 }
 
-.task-list li {
-  background: #f8f9fa;
-  padding: 0.5rem;
-  border-radius: 5px;
-  margin-top: 0.5rem;
+@media (max-width: 768px) {
+  #background-video {
+    max-height: 200px;
+  }
 }
