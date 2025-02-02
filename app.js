@@ -1,11 +1,9 @@
-// app.js
-
 class PomodoroTimer {
   constructor() {
     this.worker = new Worker('timer-worker.js');
     this.isRunning = false;
-    this.isBreakTime = false; // Indica se è una pausa
-    this.timeLeft = 25 * 60 * 1000; // 25 minuti di lavoro
+    this.isBreakTime = false;
+    this.timeLeft = 25 * 60 * 1000;
     this.pomodoroCount = 0;
     
     this.audioStart = new Audio('start.mp3');
@@ -83,15 +81,15 @@ class PomodoroTimer {
       this.pomodoroCount++;
       this.dom.pomodoroCounter.textContent = this.pomodoroCount;
       this.dom.status.textContent = "Pausa terminata! 🚀 Riprendi il lavoro!";
-      this.timeLeft = 25 * 60 * 1000; // Imposta 25 minuti per la sessione successiva
+      this.timeLeft = 25 * 60 * 1000;
       this.isBreakTime = false;
     } else {
       this.dom.status.textContent = "Sessione completata! ☕ Ora pausa!";
-      this.timeLeft = 5 * 60 * 1000; // Imposta 5 minuti di pausa
+      this.timeLeft = 5 * 60 * 1000;
       this.isBreakTime = true;
     }
 
-    setTimeout(() => this.startTimer(), 2000); // Avvia automaticamente la fase successiva dopo 2 secondi
+    setTimeout(() => this.startTimer(), 2000);
   }
 
   updateDisplay(minutes, seconds) {
